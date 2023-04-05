@@ -1,13 +1,13 @@
 extern crate sdl2;
 
 use crate::complex::Complex;
-use std::thread;
 use sdl2::rect::Point;
+use std::thread;
 
 const NTHREADS: usize = 4;
 
 fn map_to_range(num: f32, from: (f32, f32), to: (f32, f32)) -> f32 {
-    (num - from.0) * (to.1 - to.0)/(from.1 - from.0) + to.0
+    (num - from.0) * (to.1 - to.0) / (from.1 - from.0) + to.0
 }
 
 fn is_in_fractal(x: f32, y: f32) -> bool {
@@ -31,7 +31,8 @@ pub fn draw_fractal(width: usize, height: usize) -> Vec<Point> {
         thread_handlers.push(thread::spawn(move || {
             let mut points = Vec::new();
 
-            for _x in ((i*(width/NTHREADS))..((i+1)*(width/NTHREADS))).step_by(res) {
+            // Vertical paritioning of points for multithreading
+            for _x in ((i * (width / NTHREADS))..((i + 1) * (width / NTHREADS))).step_by(res) {
                 for _y in (0..height).step_by(res) {
                     let x = map_to_range(_x as f32, (0.0, width as f32), (-2.00, 0.47));
                     let y = map_to_range((height - _y) as f32, (0.0, height as f32), (-1.12, 1.12));
@@ -40,7 +41,7 @@ pub fn draw_fractal(width: usize, height: usize) -> Vec<Point> {
                     }
                 }
             }
-            
+
             points
         }));
     }
@@ -50,6 +51,7 @@ pub fn draw_fractal(width: usize, height: usize) -> Vec<Point> {
         let mut sub_points = handler.join().unwrap();
         points.append(&mut sub_points);
     }
-    
+
     points
 }
+
