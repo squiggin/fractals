@@ -55,7 +55,8 @@ fn main() {
         );
         
         for (point, iters) in points {
-            canvas.set_draw_color(Color::RGB(iters, iters, iters));
+            let gradient_col = iters*(255/200);
+            canvas.set_draw_color(Color::RGB(gradient_col, gradient_col, gradient_col));
             canvas.draw_point(point).unwrap();
         }
         canvas.present();
