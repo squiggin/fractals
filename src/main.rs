@@ -44,7 +44,7 @@ fn main() {
         }
 
         // The rest of the game loop goes here...
-        canvas.set_draw_color(Color::RGB(255, 255, 0));
+        canvas.set_draw_color(Color::RGB(255, 255, 255));
 
         let before = std::time::SystemTime::now();
         let points = draw_fractal(WIDTH as usize, HEIGHT as usize);
@@ -53,8 +53,11 @@ fn main() {
             "Frame generation time: {}",
             after.duration_since(before).unwrap().as_secs_f32()
         );
-
-        canvas.draw_points(points.as_slice()).unwrap();
+        
+        for (point, iters) in points {
+            canvas.set_draw_color(Color::RGB(iters, iters, iters));
+            canvas.draw_point(point).unwrap();
+        }
         canvas.present();
     }
 }
